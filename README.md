@@ -12,4 +12,7 @@ By default, the scene view position is saved 3 seconds after the last scene pan 
 
 The scene navigation will show a tiny dot next to the name of the scene. The dot will be green if the last position has been saved, grey otherwise. 
 
-If you see a red dot the module is disabled for that scene.
+![grey dot](https://i.postimg.cc/0ykYn7QB/screenshot-222.png)  ![green dot](https://i.postimg.cc/tJGPxxwD/screenshot-222.png)
+
+
+If you see a red dot, the module is disabled for that scene.
