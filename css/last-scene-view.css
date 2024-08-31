@@ -1,0 +1,25 @@
+#navigation #scene-list .scene.view:after {
+  content: "";
+  display: block;
+  background: #4e4e4e;
+  width: 4px;
+  height: 4px;
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  border-radius: 100%;
+  border: 1px solid #6a6a6a;
+  transition: all 0.3s;
+}
+
+#navigation #scene-list .scene.view.saved:after {
+  background: #4fe14f;
+  border: 1px solid #28ab28;
+  box-shadow: 1px -1px 2px #0005 inset, 0 0 2px #30ad30;
+}
+
+#navigation #scene-list .scene.view.disabled:after {
+  background: darkred;
+  border: 1px solid red;
+  box-shadow: 0 0 0;
+}
