@@ -1,0 +1,26 @@
+<div id="last-scene-view" class="form-group last-scene-view">
+  <label>
+    {{localize "last-scene-view.options-name"}}
+  </label>
+  <div class="form-fields">
+    {{localize "last-scene-view.disabled"}}
+    <input
+      name="flags.lastSceneView.disabled"
+      type="checkbox"
+      class="save-position-disable"
+      data-tooltip="{{localize "last-scene-view.disabled-tooltip"}}"
+      {{checked disabled}}
+    />
+    <button
+      class="clear-saved-positions"
+      onclick="clearSavedPositions('{{scene_id}}');"
+      type="button"
+      data-tooltip="{{localize "last-scene-view.clear-tooltip"}}"
+    >
+      <i class="fas fa-broom-wide fa-fw"></i>
+    </button>
+  </div>
+  <p class="notes">
+    {{localize "last-scene-view.scene-config-note"}}
+  </p>
+</div>

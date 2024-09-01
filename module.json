@@ -2,9 +2,9 @@
 	"id": "last-scene-view",
 	"title": "Save last scene view",
 	"description": "Restore scene position for each user to continue your last session exactly as you left it.",
-	"version": "1.1.0",
-	"download": "https://github.com/misthero/last-scene-view/releases/download/v1.1.0/last-scene-view.zip",
-	"manifest": "https://github.com/misthero/last-scene-view/releases/download/v1.1.0/module.json",
+	"version": "1.1.1",
+	"download": "https://github.com/misthero/last-scene-view/releases/download/v1.1.1/last-scene-view.zip",
+	"manifest": "https://github.com/misthero/last-scene-view/releases/download/v1.1.1/module.json",
 	"url": "https://github.com/misthero/last-scene-view",
 	"authors": [
 		{
@@ -22,6 +22,14 @@
 	],
 	"styles": [
 		"css/last-scene-view.css"
+	],
+	"languages": [
+		{
+			"lang": "en",
+			"name": "English",
+			"path": "lang/en.json",
+			"flags": {}
+		}
 	],
 	"relationships": {},
 	"socket": true

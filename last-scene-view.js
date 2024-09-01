@@ -8,8 +8,8 @@ class LastSceneView {
 		LastSceneView.listen();
 
 		game.settings.register(LastSceneView.mId, 'save_gm_view', {
-			name: 'Save last scene view for GM',
-			hint: 'By default the last view will be saved for both players and GMs, you can disable it for GM and the scene will keep the configured Initial View Position in the scene configuration.',
+			name: game.i18n.localize("last-scene-view.enable-gm"),
+			hint: game.i18n.localize("last-scene-view.enable-gm-note"),
 			scope: 'world',
 			requiresReload: true,
 			default: true,
@@ -18,8 +18,8 @@ class LastSceneView {
 		});
 
 		game.settings.register(LastSceneView.mId, 'timeout', {
-			name: 'Timeout before saving scene view',
-			hint: 'Number of seconds to wait before saving the new scene view position. Minimum 3 seconds',
+			name: game.i18n.localize("last-scene-view.timeout"),
+			hint: game.i18n.localize("last-scene-view.timeout-note"),
 			scope: 'world',
 			requiresReload: true,
 			default: 3,
@@ -50,7 +50,7 @@ class LastSceneView {
 			if (typeof game.scenes.current.flags?.lastSceneView?.lastPosition[game.userId] !== 'undefined') {
 				// move the canvas and notify the user.
 				canvas.pan(game.scenes.current.flags?.lastSceneView?.lastPosition[game.userId]);
-				ui.notifications.info('Last scene view position restored!');
+				ui.notifications.info(game.i18n.localize("last-scene-view.position-restored"));
 			}
 		})
 
@@ -97,18 +97,25 @@ class LastSceneView {
 		});
 
 		Hooks.on('renderSceneConfig', (s, h) => {
-			var disabled = s.document.flags?.lastSceneView?.disabled == true;
-			var scene_id = s.document._id;
-			let html = '<div id="last-scene-view" class="form-group last-scene-view"><label>Last scene view</label>';
-			html += '<div class="form-fields">';
-			html += 'Disabled <input name="flags.lastSceneView.disabled" type="checkbox" ' + (disabled ? 'checked' : '') + ' class="save-position-disable" data-tooltip="Disable for this scene" />';
-			html += '<button class="clear-saved-positions" onclick="clearSavedPositions(\'' + scene_id + '\');" type="button" data-tooltip="Clear saved positions"><i class="fas fa-broom-wide fa-fw"></i></button>';
-			html += '</div>';
-			html += '<p class="notes">The checkbox will disable the module for the current scene. Click the clear button to remove every saved position for this scene.</p>';
-			html += '</div >';
-			$(html).insertBefore($('.form-group.initial-position', h));
+			LastSceneView.addSceneConfig(s, h);
 		})
 
+	}
+
+	static async addSceneConfig(s, h) {
+		var disabled = s.document.flags?.lastSceneView?.disabled == true;
+		var scene_id = s.document._id;
+
+		const template_data = {
+			'disabled': disabled,
+			'scene_id': scene_id
+		}
+
+		const template_file = "modules/last-scene-view/templates/scene-config.hbs";
+		const rendered_html = await renderTemplate(template_file, template_data);
+		console.log(rendered_html);
+
+		$(rendered_html).insertBefore($('.form-group.initial-position', h));
 	}
 
 	static sceneSaved() {
@@ -155,7 +162,7 @@ class LastSceneView {
 
 	static async clearSavedPositions(scene_id) {
 		game.scenes.get(scene_id).update({ [`flags.lastSceneView.lastPosition`]: 'undefined' });
-		ui.notifications.warn('Every saved position for the scene "' + game.scenes.get(scene_id).name + '" has been eliminated!');
+		ui.notifications.warn(game.i18n.format("last-scene-view.positions-deleted", { sceneName: game.scenes.get(scene_id).name }));
 	}
 }
 
