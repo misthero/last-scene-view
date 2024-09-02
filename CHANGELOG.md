@@ -1,0 +1,2 @@
+- 1.1.1 First release
+- 1.1.2 Added Italian translation
