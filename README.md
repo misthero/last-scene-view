@@ -4,7 +4,7 @@
 
 This module saves each player's last scene view position, including the scene scale, and restores it when the scene is loaded again. Each scene will retain its view position relative to each player's ID.
 
-This feature is useful for resuming exactly where you left off at the end of the last session or if you need to reload Foundry. The initial scene view position will be ignored, and each player will start where they were last time.
+This module is useful for resuming exactly where you left off at the end of the last session or if you need to reload Foundry or in case of crashes and mid-session involuntary reloads. The initial scene view position will be ignored, and each player will start where they were last time.
 
 By default, the scene view position is saved 3 seconds after the last scene pan or zoom action. This delay is configurable.
 
