@@ -1,3 +1,5 @@
+![downloads](https://img.shields.io/github/downloads/misthero/last-scene-view/total.svg)
+
 # Save Last Scene View Position - A Foundry VTT Module
 
 This module saves each player's last scene view position, including the scene scale, and restores it when the scene is loaded again. Each scene will retain its view position relative to each player's ID.
