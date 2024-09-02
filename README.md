@@ -1,4 +1,4 @@
-![Downloads](https://img.shields.io/github/downloads/misthero/last-scene-view/last-scene-view.zip?style=flat&logoColor=red&label=Downloads&labelColor=darkred&color=green)
+![GitHub Release](https://img.shields.io/github/v/release/misthero/last-scene-view) ![Downloads](https://img.shields.io/github/downloads/misthero/last-scene-view/last-scene-view.zip?style=flat&logoColor=red&label=Downloads&labelColor=darkred&color=green) 
 
 # Save Last Scene View Position - A Foundry VTT Module
 
