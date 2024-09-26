@@ -2,11 +2,14 @@
   "last-scene-view.options-name": "Last scene view.",
   "last-scene-view.disabled": "Disattivato.",
   "last-scene-view.disabled-tooltip": "Disattivato per questa scena.",
+  "last-scene-view.clear-tooltip": "Elimina le posizioni salvate per questa scena",
   "last-scene-view.scene-config-note": "Il checkbox disattiva il modulo per la scena attuale. Clicca il pulsante di reset per eliminare tutte le posizioni salvate per questa scena.",
   "last-scene-view.enable-gm": "Salva l'ultima posizione della scena per il GM.",
   "last-scene-view.enable-gm-note": "Di base l'ultima posizione viene salvata sia per giocatori che per GM, puoi disattivare il salvataggio per il GM, in tal caso la posizione iniziale nella configurazione della scena verrà rispettata.",
   "last-scene-view.timeout": "Pausa prima di salvare la scena",
   "last-scene-view.timeout-note": "Il numero di secondi che dovranno passare prima che la posizione attuale venga salvata. Minimo 3 secondi",
+  "last-scene-view.message-enable": "Messaggio di ripristino.",
+  "last-scene-view.message-enable-note": "Mostra un messaggio quando la posizione della scene viene ripristinata.",
   "last-scene-view.position-restored": "Ultima posizione della scena ripristinata!",
   "last-scene-view.positions-deleted": "Tutte le posizioni per la scena \"{sceneName}\" sono state eliminate!"
 }

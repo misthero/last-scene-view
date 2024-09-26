@@ -32,6 +32,16 @@ class LastSceneView {
 			config: true
 		});
 
+		game.settings.register(LastSceneView.mId, 'enableRestoredMessage', {
+			name: game.i18n.localize("last-scene-view.message-enable"),
+			hint: game.i18n.localize("last-scene-view.message-enable-note"),
+			scope: 'world',
+			requiresReload: true,
+			default: true,
+			type: Boolean,
+			config: true
+		});
+
 		// renderSceneControls hooks seems to happen later enough to override the inital scene position
 		Hooks.on('canvasReady', (c) => {
 			if (LastSceneView.isDisabled(game.scenes.current._id)) {
@@ -50,7 +60,9 @@ class LastSceneView {
 			if (typeof game.scenes.current.flags?.lastSceneView?.lastPosition[game.userId] !== 'undefined') {
 				// move the canvas and notify the user.
 				canvas.pan(game.scenes.current.flags?.lastSceneView?.lastPosition[game.userId]);
-				ui.notifications.info(game.i18n.localize("last-scene-view.position-restored"));
+				if (game.settings.get(LastSceneView.mId, 'enableRestoredMessage')) {
+					ui.notifications.info(game.i18n.localize("last-scene-view.position-restored"));
+				}
 			}
 		})
 
