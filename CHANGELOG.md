@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [1.2.1]
+## [1.2.11]
 
 - Option to disable the view restored message
 - Translations fixes
