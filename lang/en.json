@@ -1,6 +1,6 @@
 {
   "last-scene-view.options-name": "Last scene view.",
-  "last-scene-view.disabled": "Disbled.",
+  "last-scene-view.disabled": "Disabled.",
   "last-scene-view.disabled-tooltip": "Disable for this scene.",
   "last-scene-view.clear-tooltip": "Delete the last scene position for this scene.",
   "last-scene-view.scene-config-note": "The checkbox will disable the module for the current scene. Click the clear button to remove every saved position for this scene.",

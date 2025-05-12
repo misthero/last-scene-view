@@ -68,6 +68,7 @@ class LastSceneView {
 
 		Hooks.on('renderSceneNavigation', (s) => {
 			LastSceneView.isDisabled(game.scenes.current._id);
+			LastSceneView.processUpdateScene();
 		})
 
 		Hooks.on('updateScene', (s) => {
@@ -80,38 +81,49 @@ class LastSceneView {
 			}
 
 			LastSceneView.sceneUnsaved();
-			// grab scene position and user id
-			let data = {
-				'type': 'scenePosition',
-				'position': game.scenes.current._viewPosition,
-				'scene_id': game.scenes.current._id,
-				'user_id': game.userId
-			};
 
-			clearTimeout(LastSceneView.socketDebounce);
-			var timeout = game.settings.get(LastSceneView.mId, 'timeout') * 1000;
-			if (game.user.isGM && game.settings.get(LastSceneView.mId, 'save_gm_view')) {
-				// gm can save his own scene position directly
-				LastSceneView.socketDebounce = setTimeout(function () {
-					LastSceneView.updateLastPosition(data.scene_id, data.user_id, data.position);
-					LastSceneView.sceneSaved();
-				}, timeout);
-
-			} else {
-				// players will send the data to the gm so his client can save the scene
-				LastSceneView.socketDebounce = setTimeout(function () {
-					game.socket.emit('module.' + LastSceneView.mId, data);
-					LastSceneView.sceneSaved();
-				}, timeout);
-			}
-
+			LastSceneView.processUpdateScene();
 
 		});
 
 		Hooks.on('renderSceneConfig', (s, h) => {
 			LastSceneView.addSceneConfig(s, h);
 		})
+	}
 
+	static processUpdateScene() {
+		// grab scene position and user id
+		let data = LastSceneView.getSceneData();
+
+		clearTimeout(LastSceneView.socketDebounce);
+		var timeout = game.settings.get(LastSceneView.mId, 'timeout') * 1000;
+		if (game.user.isGM && game.settings.get(LastSceneView.mId, 'save_gm_view')) {
+			// gm can save his own scene position directly
+			LastSceneView.socketDebounce = setTimeout(function () {
+				LastSceneView.updateLastPosition(data.scene_id, data.user_id, data.position);
+				LastSceneView.sceneSaved();
+			}, timeout);
+
+		} else {
+			// players will send the data to the gm so his client can save the scene
+			LastSceneView.socketDebounce = setTimeout(function () {
+				game.socket.emit('module.' + LastSceneView.mId, data);
+				LastSceneView.sceneSaved();
+			}, timeout);
+		}
+
+	}
+
+
+	static getSceneData() {
+		// grab scene position and user id
+		let data = {
+			'type': 'scenePosition',
+			'position': game.scenes.current._viewPosition,
+			'scene_id': game.scenes.current._id,
+			'user_id': game.userId
+		};
+		return data;
 	}
 
 	static async addSceneConfig(s, h) {
@@ -125,25 +137,33 @@ class LastSceneView {
 
 		const template_file = "modules/last-scene-view/templates/scene-config.hbs";
 		const rendered_html = await renderTemplate(template_file, template_data);
-		console.log(rendered_html);
 
 		$(rendered_html).insertBefore($('.form-group.initial-position', h));
+		$('.tab[data-tab="basics"]', h).addClass('scrollable').append(rendered_html);
 	}
 
 	static sceneSaved() {
 		$('#navigation #scene-list .scene.view').addClass('saved');
+		//foundry-vtt v13+
+		$('#scene-navigation .scene.view').addClass('saved');
 	}
 
 	static sceneUnsaved() {
 		$('#navigation #scene-list .scene.view').removeClass('saved');
+		//foundry-vtt v13+
+		$('#scene-navigation .scene.view').removeClass('saved');
 	}
 
 	static sceneDisabled() {
 		$('#navigation #scene-list .scene.view').addClass('disabled');
+		//foundry-vtt v13+
+		$('#scene-navigation .scene.view').addClass('disabled');
 	}
 
 	static sceneEnabled() {
 		$('#navigation #scene-list .scene.view').removeClass('disabled');
+		//foundry-vtt v13+
+		$('#scene-navigation .scene.view').removeClass('disabled');
 	}
 
 	static isDisabled(scene_id) {

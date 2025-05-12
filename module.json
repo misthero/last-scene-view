@@ -1,42 +1,42 @@
 {
-	"id": "last-scene-view",
-	"title": "Save last scene view",
-	"description": "Restore scene position for each user to continue your last session exactly as you left it.",
-	"version": "1.1.2",
-	"download": "https://github.com/misthero/last-scene-view/releases/download/v1.1.2/last-scene-view.zip",
-	"manifest": "https://github.com/misthero/last-scene-view/releases/download/v1.1.2/module.json",
-	"url": "https://github.com/misthero/last-scene-view",
-	"authors": [
-		{
-			"name": "Misthero",
-			"flags": {}
-		}
-	],
-	"compatibility": {
-		"minimum": "11",
-		"verified": "12",
-		"maximum": "12"
-	},
-	"scripts": [
-		"last-scene-view.js"
-	],
-	"styles": [
-		"css/last-scene-view.css"
-	],
-	"languages": [
-		{
-			"lang": "en",
-			"name": "English",
-			"path": "lang/en.json",
-			"flags": {}
-		},
-		{
-			"lang": "it",
-			"name": "Italian",
-			"path": "lang/it.json",
-			"flags": {}
-		}
-	],
-	"relationships": {},
-	"socket": true
+    "id": "last-scene-view",
+    "title": "Save last scene view",
+    "description": "Restore scene position for each user to continue your last session exactly as you left it.",
+    "version": "1.3.00",
+    "download": "https://github.com/misthero/last-scene-view/releases/download/v1.2.11/last-scene-view.zip",
+    "manifest": "https://github.com/misthero/last-scene-view/releases/latest/download/module.json",
+    "url": "https://github.com/misthero/last-scene-view",
+    "authors": [
+        {
+            "name": "Misthero",
+            "flags": {}
+        }
+    ],
+    "compatibility": {
+        "minimum": "11",
+        "verified": "13",
+        "maximum": "13"
+    },
+    "scripts": [
+        "last-scene-view.js"
+    ],
+    "styles": [
+        "css/last-scene-view.css"
+    ],
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "lang/en.json",
+            "flags": {}
+        },
+        {
+            "lang": "it",
+            "name": "Italian",
+            "path": "lang/it.json",
+            "flags": {}
+        }
+    ],
+    "relationships": {},
+    "socket": true
 }
