@@ -1,0 +1,15 @@
+{
+  "last-scene-view.options-name": "Ostatni widok sceny.",
+  "last-scene-view.disabled": "Wyłączony.",
+  "last-scene-view.disabled-tooltip": "Wyłącz dla tej sceny.",
+  "last-scene-view.clear-tooltip": "Usunięcie ostatniej pozycji dla tej sceny.",
+  "last-scene-view.scene-config-note": "Pole wyboru spowoduje wyłączenie modułu dla bieżącej sceny. Kliknięcie przycisku Wyczyść spowoduje usunięcie wszystkich zapisanych pozycji dla tej sceny.",
+  "last-scene-view.enable-gm": "Zapisz ostatni widok sceny dla MG.",
+  "last-scene-view.enable-gm-note": "Domyślnie ostatni widok zostanie zapisany zarówno dla graczy, jak i MG, można to wyłączyć dla MG, a scena zachowa skonfigurowaną pozycję widoku początkowego w konfiguracji sceny.",
+  "last-scene-view.timeout": "Limit czasu przed zapisaniem widoku sceny",
+  "last-scene-view.timeout-note": "Liczba sekund oczekiwania przed zapisaniem nowej pozycji widoku sceny. Minimum 3 sekundy",
+  "last-scene-view.message-enable": "Włącz wiadomości przywrócenia pozycji.",
+  "last-scene-view.message-enable-note": "Wyświetla komunikat po przywróceniu pozycji widoku sceny.",
+  "last-scene-view.position-restored": "Przywrócono ostatnią pozycję widoku sceny!",
+  "last-scene-view.positions-deleted": "Każda zapisana pozycja dla sceny \"{sceneName}\" została wyeliminowana!"
+}

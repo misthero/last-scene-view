@@ -35,6 +35,12 @@
 			"name": "Italian",
 			"path": "lang/it.json",
 			"flags": {}
+		},
+		{
+			"lang": "pl",
+			"name": "Polski",
+			"path": "lang/pl.json",
+			"flags": {}
 		}
 	],
 	"relationships": {},
