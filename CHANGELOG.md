@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [1.3.01]
+
+- Fix save dot overriding the foundry scene navigation status icon
+
 ## [1.3.00]
 
 - Foundry v13 Compatibility
