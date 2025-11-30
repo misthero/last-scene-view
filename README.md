@@ -6,7 +6,7 @@
 
 ## If you like this module you can buy me a coffee here:
 
-[![ko-fi](https://img.shields.io/badge/ko--fi-Support%20Me-red?style=flat-square&logo=ko-fi)](https://ko-fi.com/misthero)
+[![ko-fi](https://img.shields.io/badge/ko--fi-Support%20Me-red?style=for-the-badge&logo=ko-fi)](https://ko-fi.com/misthero)
 
 # Save Last Scene View Position - A Foundry VTT Module
 
