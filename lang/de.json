@@ -1,0 +1,15 @@
+{
+  "last-scene-view.options-name": "Letzte Szenenansicht.",
+  "last-scene-view.disabled": "Deaktiviert.",
+  "last-scene-view.disabled-tooltip": "Für diese Szene deaktivieren.",
+  "last-scene-view.clear-tooltip": "Die letzte Szenenposition für diese Szene löschen.",
+  "last-scene-view.scene-config-note": "Das Kontrollkästchen deaktiviert das Modul für die aktuelle Szene. Klicke auf die Löschen-Schaltfläche, um alle gespeicherten Positionen für diese Szene zu entfernen.",
+  "last-scene-view.enable-gm": "Letzte Szenenansicht für SL speichern.",
+  "last-scene-view.enable-gm-note": "Standardmäßig wird die letzte Ansicht für Spieler und SL gespeichert. Du kannst dies für den SL deaktivieren und die Szene behält die konfigurierte Anfangsansicht in der Szenenkonfiguration.",
+  "last-scene-view.timeout": "Wartezeit vor dem Speichern der Szenenansicht",
+  "last-scene-view.timeout-note": "Anzahl der Sekunden, die vor dem Speichern der neuen Szenenansicht gewartet werden. Minimum 3 Sekunden",
+  "last-scene-view.message-enable": "Wiederherstellungsnachricht aktivieren.",
+  "last-scene-view.message-enable-note": "Eine Nachricht anzeigen, wenn die Szenenansicht wiederhergestellt wird.",
+  "last-scene-view.position-restored": "Letzte Szenenansicht wurde wiederhergestellt!",
+  "last-scene-view.positions-deleted": "Alle gespeicherten Positionen für die Szene \"{sceneName}\" wurden entfernt!"
+}

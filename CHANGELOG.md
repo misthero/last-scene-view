@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## [1.3.02]
+
+- Added de.json and es.json for German and Spanish language support.
+- Refactored last-scene-view.js to improve debounce handling, scene class updates, and error checking.
+- Updated CSS for easier theming with variables.
+- Improved scene config template and updated module.json for new languages and compatibility.
+
 ## [1.3.01]
 
 - Fix save dot overriding the foundry scene navigation status icon

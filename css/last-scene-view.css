@@ -1,28 +1,40 @@
+/* CSS Variables for easy theming */
+:root {
+  --lsv-default-bg: #4e4e4e;
+  --lsv-default-border: #6a6a6a;
+  --lsv-saved-bg: #4fe14f;
+  --lsv-saved-border: #28ab28;
+  --lsv-saved-shadow1: #0005;
+  --lsv-saved-shadow2: #30ad30;
+  --lsv-disabled-bg: darkred;
+  --lsv-disabled-border: red;
+}
+
 #navigation #scene-list .scene.view:before,
 #scene-navigation .scene.view:before {
   content: "";
   display: block;
-  background: #4e4e4e;
+  background: var(--lsv-default-bg);
   width: 4px;
   height: 4px;
   position: absolute;
   top: 2px;
   right: 2px;
   border-radius: 100%;
-  border: 1px solid #6a6a6a;
+  border: 1px solid var(--lsv-default-border);
   transition: all 0.3s;
 }
 
 #navigation #scene-list .scene.view.saved:before,
 #scene-navigation .scene.view.saved:before {
-  background: #4fe14f;
-  border: 1px solid #28ab28;
-  box-shadow: 1px -1px 2px #0005 inset, 0 0 2px #30ad30;
+  background: var(--lsv-saved-bg);
+  border: 1px solid var(--lsv-saved-border);
+  box-shadow: 1px -1px 2px var(--lsv-saved-shadow1) inset, 0 0 2px var(--lsv-saved-shadow2);
 }
 
 #navigation #scene-list .scene.view.disabled:before,
 #scene-navigation .scene.view.disabled:before {
-  background: darkred;
-  border: 1px solid red;
+  background: var(--lsv-disabled-bg);
+  border: 1px solid var(--lsv-disabled-border);
   box-shadow: 0 0 0;
 }

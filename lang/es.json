@@ -1,0 +1,15 @@
+{
+  "last-scene-view.options-name": "Vista de última escena.",
+  "last-scene-view.disabled": "Deshabilitado.",
+  "last-scene-view.disabled-tooltip": "Deshabilitar para esta escena.",
+  "last-scene-view.clear-tooltip": "Eliminar la última posición de escena para esta escena.",
+  "last-scene-view.scene-config-note": "La casilla deshabilitará el módulo para la escena actual. Haz clic en el botón de limpiar para eliminar todas las posiciones guardadas para esta escena.",
+  "last-scene-view.enable-gm": "Guardar vista de última escena para el GM.",
+  "last-scene-view.enable-gm-note": "Por defecto, la última vista se guardará para jugadores y GM. Puedes deshabilitarlo para el GM y la escena mantendrá la posición de vista inicial configurada en la configuración de la escena.",
+  "last-scene-view.timeout": "Tiempo de espera antes de guardar la vista de escena",
+  "last-scene-view.timeout-note": "Número de segundos a esperar antes de guardar la nueva posición de vista de escena. Mínimo 3 segundos",
+  "last-scene-view.message-enable": "Habilitar mensaje de restauración.",
+  "last-scene-view.message-enable-note": "Mostrar un mensaje cuando la posición de vista de escena sea restaurada.",
+  "last-scene-view.position-restored": "¡Posición de vista de última escena restaurada!",
+  "last-scene-view.positions-deleted": "¡Todas las posiciones guardadas para la escena \"{sceneName}\" han sido eliminadas!"
+}
