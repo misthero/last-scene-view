@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## [1.3.02]
+## [1.3.03]
 
 - Added de.json and es.json for German and Spanish language support.
 - Refactored last-scene-view.js to improve debounce handling, scene class updates, and error checking.
