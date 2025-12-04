@@ -66,7 +66,7 @@ class LastSceneView {
 				LastSceneView.sceneEnabled();
 			}
 
-			if (game.user.isGM && !game.settings.get(LastSceneView.mId, 'save_gm_view')) {
+			if (game?.user?.isGM && !game.settings.get(LastSceneView.mId, 'save_gm_view')) {
 				// do nothing if gm disabled his last scene view.
 				LastSceneView.sceneDisabled();
 				return;
@@ -119,7 +119,7 @@ class LastSceneView {
 		}
 		var timeout = game.settings.get(LastSceneView.mId, 'timeout') * 1000;
 		let fn;
-		if (game.user.isGM && game.settings.get(LastSceneView.mId, 'save_gm_view')) {
+		if (game?.user?.isGM && game.settings.get(LastSceneView.mId, 'save_gm_view')) {
 			// gm can save his own scene position directly
 			fn = function () {
 				LastSceneView.updateLastPosition(data.scene_id, data.user_id, data.position);
@@ -210,7 +210,7 @@ class LastSceneView {
 
 	static async listen() {
 		game.socket.on('module.' + LastSceneView.mId, async data => {
-			if (game.user.isGM && data.type == 'scenePosition') {
+			if (game?.user?.isGM && data?.type == 'scenePosition') {
 				await LastSceneView.updateLastPosition(data.scene_id, data.user_id, data.position);
 			}
 		});

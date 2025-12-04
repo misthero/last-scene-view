@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## [1.3.05]
+
+- Bugfix
+
 ## [1.3.03]
 
 - Added de.json and es.json for German and Spanish language support.
