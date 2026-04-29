@@ -1,22 +1,136 @@
 class LastSceneView {
+	static NO_LEVEL_KEY = '__none__';
+
 	static updateSceneClass(className, action = "add") {
+		const currentSceneId = LastSceneView.getCurrentScene()?.id;
+		if (!currentSceneId) return;
+
+		const escapedId = globalThis.CSS?.escape ? CSS.escape(currentSceneId) : currentSceneId.replace(/"/g, '\\"');
 		const selectors = [
-			'#navigation #scene-list .scene.view',
-			'#scene-navigation .scene.view'
+			`#navigation #scene-list .scene[data-scene-id="${escapedId}"]`,
+			`#scene-navigation .scene[data-scene-id="${escapedId}"]`
 		];
-		selectors.forEach(sel => {
+		for (const sel of selectors) {
 			document.querySelectorAll(sel).forEach(el => {
-				if (action === "add") {
-					el.classList.add(className);
-				} else {
-					el.classList.remove(className);
-				}
+				if (action === "add") el.classList.add(className);
+				else el.classList.remove(className);
 			});
-		});
+		}
 	}
 
 	static socketDebounceMap = new Map();
+	static observedLevelByScene = new Map();
+	static sceneInitialLevelWriteInFlight = new Set();
 	static mId = 'last-scene-view';
+
+	static getCurrentScene() {
+		return canvas?.scene ?? game.scenes.current ?? null;
+	}
+
+	static getCurrentLevelId() {
+		return canvas?.level?.id ?? null;
+	}
+
+	static getLevelKey(levelId) {
+		return levelId ?? LastSceneView.NO_LEVEL_KEY;
+	}
+
+	static normalizePosition(position) {
+		if (!position) {
+			return null;
+		}
+		const x = Number(position.x);
+		const y = Number(position.y);
+		const scale = Number(position.scale);
+		const savedAt = Number(position.savedAt);
+		if (!Number.isFinite(x) || !Number.isFinite(y) || !Number.isFinite(scale)) {
+			return null;
+		}
+		return {
+			x,
+			y,
+			scale,
+			level: position.level ?? null,
+			savedAt: Number.isFinite(savedAt) ? savedAt : null
+		};
+	}
+
+	static getCanvasPositionSnapshot() {
+		if (!canvas?.ready || !canvas?.stage) {
+			return null;
+		}
+		return LastSceneView.normalizePosition({
+			x: canvas.stage.pivot.x,
+			y: canvas.stage.pivot.y,
+			scale: canvas.stage.scale.x,
+			level: LastSceneView.getCurrentLevelId()
+		});
+	}
+
+	static hasSavedPosition(scene, userId) {
+		if (!scene || !userId) return false;
+
+		const levelPositions = scene?.flags?.lastSceneView?.lastPositionByLevel?.[userId];
+		if (levelPositions && typeof levelPositions === 'object') {
+			for (const pos of Object.values(levelPositions)) {
+				if (LastSceneView.normalizePosition(pos)) {
+					return true;
+				}
+			}
+		}
+
+		return Boolean(LastSceneView.normalizePosition(scene?.flags?.lastSceneView?.lastPosition?.[userId]));
+	}
+
+	static refreshSavedIndicator(sceneId = null, userId = null) {
+		const scene = sceneId ? game.scenes.get(sceneId) : LastSceneView.getCurrentScene();
+		if (!scene) return;
+
+		const uid = userId ?? game.userId;
+		if (!uid) return;
+
+		if (LastSceneView.hasSavedPosition(scene, uid)) {
+			LastSceneView.sceneSaved();
+		} else {
+			LastSceneView.sceneUnsaved();
+		}
+	}
+
+	static getSavedPosition(scene, userId, {
+		preferredLevelId = null,
+		preferPreferredLevel = true
+	} = {}) {
+		const flags = scene?.flags?.lastSceneView;
+		if (!flags) {
+			return null;
+		}
+
+		const levelPositions = flags.lastPositionByLevel?.[userId];
+		if (levelPositions && typeof levelPositions === 'object') {
+			if (preferPreferredLevel) {
+				const levelKey = LastSceneView.getLevelKey(preferredLevelId);
+				const byLevel = levelPositions[levelKey];
+				if (byLevel) {
+					return LastSceneView.normalizePosition(byLevel);
+				}
+			}
+		}
+
+		const legacy = flags.lastPosition?.[userId];
+		if (legacy) {
+			return LastSceneView.normalizePosition(legacy);
+		}
+
+		return null;
+	}
+
+	static async restorePosition(scene, position) {
+		const normalized = LastSceneView.normalizePosition(position);
+		if (!normalized) return;
+		if (canvas?.scene?.id === scene.id) {
+			canvas.pan({ x: normalized.x, y: normalized.y, scale: normalized.scale });
+		}
+	}
 
 	static initialize() {
 		// send scene data to GM
@@ -58,8 +172,13 @@ class LastSceneView {
 		});
 
 		// renderSceneControls hooks seems to happen later enough to override the inital scene position
-		Hooks.on('canvasReady', (c) => {
-			if (LastSceneView.isDisabled(game.scenes.current._id)) {
+		Hooks.on('canvasReady', async () => {
+			const currentScene = LastSceneView.getCurrentScene();
+			if (!currentScene) {
+				return;
+			}
+
+			if (LastSceneView.isDisabled(currentScene.id)) {
 				LastSceneView.sceneDisabled();
 				return;
 			} else {
@@ -72,32 +191,66 @@ class LastSceneView {
 				return;
 			}
 
-			if (typeof game.scenes.current.flags?.lastSceneView?.lastPosition[game.userId] !== 'undefined') {
-				// move the canvas and notify the user.
-				canvas.pan(game.scenes.current.flags?.lastSceneView?.lastPosition[game.userId]);
+			// Scene level selection is handled by core Scene.initialLevel.
+			// We only restore x/y/scale for the current level.
+			const savedPosition = LastSceneView.getSavedPosition(currentScene, game.userId, {
+				preferredLevelId: LastSceneView.getCurrentLevelId(),
+				preferPreferredLevel: true
+			});
+			if (savedPosition) {
+				await LastSceneView.restorePosition(currentScene, savedPosition);
 				if (game.settings.get(LastSceneView.mId, 'enableRestoredMessage')) {
 					ui.notifications.info(game.i18n.localize("last-scene-view.position-restored"));
 				}
 			}
+
+			LastSceneView.observedLevelByScene.set(currentScene.id, LastSceneView.getCurrentLevelId());
+			LastSceneView.refreshSavedIndicator(currentScene.id, game.userId);
 		})
 
-		Hooks.on('renderSceneNavigation', (s) => {
-			LastSceneView.isDisabled(game.scenes.current._id);
-			LastSceneView.processUpdateScene();
+		Hooks.on('renderSceneNavigation', () => {
+			const currentSceneId = LastSceneView.getCurrentScene()?.id;
+			if (!currentSceneId) {
+				return;
+			}
+
+			const disabled = LastSceneView.isDisabled(currentSceneId);
+			LastSceneView.refreshSavedIndicator(currentSceneId, game.userId);
+			const currentLevelId = LastSceneView.getCurrentLevelId();
+			const observedLevelId = LastSceneView.observedLevelByScene.get(currentSceneId);
+
+			if (observedLevelId === undefined) {
+				LastSceneView.observedLevelByScene.set(currentSceneId, currentLevelId);
+				return;
+			}
+
+			if (observedLevelId !== currentLevelId) {
+				LastSceneView.observedLevelByScene.set(currentSceneId, currentLevelId);
+				if (!disabled) {
+					LastSceneView.syncSceneInitialLevel(currentSceneId, currentLevelId);
+					LastSceneView.processUpdateScene();
+				}
+			}
 		})
 
-		Hooks.on('updateScene', (s) => {
-			LastSceneView.isDisabled(game.scenes.current._id);
+		Hooks.on('updateScene', () => {
+			const currentSceneId = LastSceneView.getCurrentScene()?.id;
+			if (!currentSceneId) {
+				return;
+			}
+			LastSceneView.isDisabled(currentSceneId);
+			LastSceneView.refreshSavedIndicator(currentSceneId, game.userId);
 		})
 
-		Hooks.on('canvasPan', (p) => {
-			if (LastSceneView.isDisabled(game.scenes.current._id)) {
+		Hooks.on('canvasPan', (_canvas, position) => {
+			const currentSceneId = LastSceneView.getCurrentScene()?.id;
+			if (!currentSceneId || LastSceneView.isDisabled(currentSceneId)) {
 				return;
 			}
 
 			LastSceneView.sceneUnsaved();
 
-			LastSceneView.processUpdateScene();
+			LastSceneView.processUpdateScene(position);
 
 		});
 
@@ -108,11 +261,19 @@ class LastSceneView {
 		})
 	}
 
-	static processUpdateScene() {
-		// grab scene position and user id
-		let data = LastSceneView.getSceneData();
+	static processUpdateScene(position = null) {
+		if (game?.user?.isGM && !game.settings.get(LastSceneView.mId, 'save_gm_view')) {
+			return;
+		}
 
-		const key = `${data.scene_id}:${data.user_id}`;
+		// grab scene position and user id
+		let data = LastSceneView.getSceneData(position);
+		if (!data) {
+			return;
+		}
+
+		const levelKey = LastSceneView.getLevelKey(data.position.level);
+		const key = `${data.scene_id}:${data.user_id}:${levelKey}`;
 		const debounceMap = LastSceneView.socketDebounceMap;
 		if (debounceMap.has(key)) {
 			clearTimeout(debounceMap.get(key));
@@ -140,12 +301,22 @@ class LastSceneView {
 	}
 
 
-	static getSceneData() {
+	static getSceneData(position = null) {
+		const scene = LastSceneView.getCurrentScene();
+		if (!scene) {
+			return null;
+		}
+
+		const normalizedPosition = LastSceneView.normalizePosition(position) ?? LastSceneView.getCanvasPositionSnapshot();
+		if (!normalizedPosition) {
+			return null;
+		}
+
 		// grab scene position and user id
 		let data = {
 			'type': 'scenePosition',
-			'position': game.scenes.current._viewPosition,
-			'scene_id': game.scenes.current._id,
+			'position': normalizedPosition,
+			'scene_id': scene.id,
 			'user_id': game.userId
 		};
 		return data;
@@ -162,14 +333,13 @@ class LastSceneView {
 
 		const template_file = "modules/last-scene-view/templates/scene-config.hbs";
 		const rendered_html = await foundry.applications.handlebars.renderTemplate(template_file, template_data);
-		// Insert before .form-group.initial-position
+		// Insert before .form-group.initial-position when available, otherwise append to basics tab.
 		const initialPosition = h.querySelector('.form-group.initial-position');
 		if (initialPosition) {
 			initialPosition.insertAdjacentHTML('beforebegin', rendered_html);
-		}
-		// Add 'scrollable' class and append rendered_html
-		const basicsTab = h.querySelector('.tab[data-tab="basics"]');
-		if (basicsTab) {
+		} else {
+			const basicsTab = h.querySelector('.tab[data-tab="basics"]');
+			if (!basicsTab) return;
 			basicsTab.classList.add('scrollable');
 			basicsTab.insertAdjacentHTML('beforeend', rendered_html);
 		}
@@ -198,7 +368,7 @@ class LastSceneView {
 			return false;
 		}
 		const disabled = scene.flags?.lastSceneView?.disabled === true;
-		if (scene_id === game.scenes.current._id) {
+		if (scene_id === LastSceneView.getCurrentScene()?.id) {
 			if (disabled) {
 				LastSceneView.sceneDisabled();
 			} else {
@@ -216,6 +386,32 @@ class LastSceneView {
 		});
 	}
 
+	static async syncSceneInitialLevel(scene_id, levelId) {
+		if (!game?.user?.isGM) return;
+		if (!levelId) return;
+
+		const scene = game.scenes.get(scene_id);
+		if (!scene) return;
+
+		if (scene.initialLevel?.id === levelId || scene.initialLevel === levelId) {
+			return;
+		}
+
+		const lockKey = `${scene_id}:${levelId}`;
+		if (LastSceneView.sceneInitialLevelWriteInFlight.has(lockKey)) {
+			return;
+		}
+
+		LastSceneView.sceneInitialLevelWriteInFlight.add(lockKey);
+		try {
+			await scene.update({ initialLevel: levelId });
+		} catch (err) {
+			console.error('[last-scene-view] Failed to update Scene.initialLevel', err);
+		} finally {
+			LastSceneView.sceneInitialLevelWriteInFlight.delete(lockKey);
+		}
+	}
+
 	static async updateLastPosition(scene_id, user_id, position) {
 		if (!LastSceneView.isDisabled(scene_id)) {
 			const scene = game.scenes.get(scene_id);
@@ -223,7 +419,19 @@ class LastSceneView {
 				console.warn(`[last-scene-view] Scene with ID '${scene_id}' not found. Cannot update last position.`);
 				return;
 			}
-			scene.update({ [`flags.lastSceneView.lastPosition.${user_id}`]: position });
+			const normalizedPosition = LastSceneView.normalizePosition(position);
+			if (!normalizedPosition) {
+				return;
+			}
+			normalizedPosition.savedAt = Date.now();
+			const levelKey = LastSceneView.getLevelKey(normalizedPosition.level);
+			await scene.update({
+				[`flags.lastSceneView.lastPositionByLevel.${user_id}.${levelKey}`]: normalizedPosition
+			});
+
+			if (scene_id === LastSceneView.getCurrentScene()?.id && user_id === game.userId) {
+				LastSceneView.refreshSavedIndicator(scene_id, user_id);
+			}
 		}
 	}
 
@@ -234,7 +442,10 @@ class LastSceneView {
 			ui.notifications.warn(game.i18n.localize("last-scene-view.scene-not-found"));
 			return;
 		}
-		scene.update({ [`flags.lastSceneView.lastPosition`]: null });
+		scene.update({
+			[`flags.lastSceneView.lastPosition`]: null,
+			[`flags.lastSceneView.lastPositionByLevel`]: null
+		});
 		ui.notifications.warn(game.i18n.format("last-scene-view.positions-deleted", { sceneName: scene.name }));
 	}
 }
@@ -246,3 +457,7 @@ Hooks.on('init', () => {
 function clearSavedPositions(scene_id) {
 	LastSceneView.clearSavedPositions(scene_id);
 }
+
+Hooks.on('canvasInit', (canvas) => {
+	console.debug('[last-scene-view] Canvas initialized.', canvas);
+});

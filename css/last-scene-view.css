@@ -11,7 +11,9 @@
 }
 
 #navigation #scene-list .scene.view:before,
-#scene-navigation .scene.view:before {
+#navigation #scene-list .scene.active:before,
+#scene-navigation .scene.view:before,
+#scene-navigation .scene.active:before {
   content: "";
   display: block;
   background: var(--lsv-default-bg);
@@ -26,14 +28,18 @@
 }
 
 #navigation #scene-list .scene.view.saved:before,
-#scene-navigation .scene.view.saved:before {
+#navigation #scene-list .scene.active.saved:before,
+#scene-navigation .scene.view.saved:before,
+#scene-navigation .scene.active.saved:before {
   background: var(--lsv-saved-bg);
   border: 1px solid var(--lsv-saved-border);
   box-shadow: 1px -1px 2px var(--lsv-saved-shadow1) inset, 0 0 2px var(--lsv-saved-shadow2);
 }
 
 #navigation #scene-list .scene.view.disabled:before,
-#scene-navigation .scene.view.disabled:before {
+#navigation #scene-list .scene.active.disabled:before,
+#scene-navigation .scene.view.disabled:before,
+#scene-navigation .scene.active.disabled:before {
   background: var(--lsv-disabled-bg);
   border: 1px solid var(--lsv-disabled-border);
   box-shadow: 0 0 0;

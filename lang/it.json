@@ -10,6 +10,8 @@
   "last-scene-view.timeout-note": "Il numero di secondi che dovranno passare prima che la posizione attuale venga salvata. Minimo 3 secondi",
   "last-scene-view.message-enable": "Messaggio di ripristino.",
   "last-scene-view.message-enable-note": "Mostra un messaggio quando la posizione della scene viene ripristinata.",
+  "last-scene-view.restore-level": "Ripristina ultimo livello visualizzato.",
+  "last-scene-view.restore-level-note": "Se abilitato, riaprendo o riattivando una scena viene ripristinato il livello visualizzato più di recente per ogni utente. Se disabilitato, il livello non viene ripristinato e Foundry usa il livello predefinito della scena.",
   "last-scene-view.position-restored": "Ultima posizione della scena ripristinata!",
   "last-scene-view.positions-deleted": "Tutte le posizioni per la scena \"{sceneName}\" sono state eliminate!"
 }
