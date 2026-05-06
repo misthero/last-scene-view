@@ -12,6 +12,7 @@
   "last-scene-view.message-enable-note": "Mostrar un mensaje cuando la posición de vista de escena sea restaurada.",
   "last-scene-view.restore-level": "Restaurar último nivel visualizado.",
   "last-scene-view.restore-level-note": "Si está habilitado, al reabrir o reactivar una escena se restaurará el nivel visto más recientemente por cada usuario. Si está deshabilitado, no se restaurará el nivel y Foundry usará el nivel predeterminado de la escena.",
+  "last-scene-view.position-and-level-restored": "¡Posición y nivel de la última vista de escena restaurados!",
   "last-scene-view.position-restored": "¡Posición de vista de última escena restaurada!",
   "last-scene-view.positions-deleted": "¡Todas las posiciones guardadas para la escena \"{sceneName}\" han sido eliminadas!"
 }

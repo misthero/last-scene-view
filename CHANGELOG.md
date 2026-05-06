@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [Unreleased]
+
+- Added world setting to enable/disable restoring each user's last viewed level (enabled by default).
+- Added contextual restore notification for "position + level restored" versus position-only restore.
+- Prevented scene initial level sync updates when level restore is disabled or scene is disabled.
+
 ## [1.3.05]
 
 - Bugfix

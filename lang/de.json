@@ -12,6 +12,7 @@
   "last-scene-view.message-enable-note": "Eine Nachricht anzeigen, wenn die Szenenansicht wiederhergestellt wird.",
   "last-scene-view.restore-level": "Zuletzt betrachtete Ebene wiederherstellen.",
   "last-scene-view.restore-level-note": "Wenn aktiviert, wird beim erneuten Öffnen oder Reaktivieren einer Szene die zuletzt betrachtete Ebene jedes Benutzers wiederhergestellt. Wenn deaktiviert, wird keine Ebene wiederhergestellt und Foundry verwendet die Standardebene der Szene.",
+  "last-scene-view.position-and-level-restored": "Letzte Szenenansicht mit Position und Ebene wurde wiederhergestellt!",
   "last-scene-view.position-restored": "Letzte Szenenansicht wurde wiederhergestellt!",
   "last-scene-view.positions-deleted": "Alle gespeicherten Positionen für die Szene \"{sceneName}\" wurden entfernt!"
 }

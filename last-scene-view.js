@@ -21,6 +21,7 @@ class LastSceneView {
 	static socketDebounceMap = new Map();
 	static observedLevelByScene = new Map();
 	static sceneInitialLevelWriteInFlight = new Set();
+	static manuallyChangedLevelScenes = new Set();
 	static mId = 'last-scene-view';
 
 	static getCurrentScene() {
@@ -113,6 +114,14 @@ class LastSceneView {
 				if (byLevel) {
 					return LastSceneView.normalizePosition(byLevel);
 				}
+				// If not found for the current level, try the no-level key as fallback
+				// (handles positions saved before level support was added to this code path)
+				if (levelKey !== LastSceneView.NO_LEVEL_KEY) {
+					const noLevelFallback = levelPositions[LastSceneView.NO_LEVEL_KEY];
+					if (noLevelFallback) {
+						return LastSceneView.normalizePosition(noLevelFallback);
+					}
+				}
 			}
 		}
 
@@ -130,6 +139,29 @@ class LastSceneView {
 		if (canvas?.scene?.id === scene.id) {
 			canvas.pan({ x: normalized.x, y: normalized.y, scale: normalized.scale });
 		}
+	}
+
+	static sceneHasLevels(scene) {
+		if (!scene) return false;
+		const levels = scene.levels;
+		if (!levels) return false;
+		if (typeof levels.size === 'number') return levels.size > 1;
+		if (Array.isArray(levels)) return levels.length > 1;
+		if (typeof levels.length === 'number') return levels.length > 1;
+		return false;
+	}
+
+	static wasLevelRestored(scene, savedPosition) {
+		if (!savedPosition?.level) {
+			return false;
+		}
+		if (!LastSceneView.sceneHasLevels(scene)) {
+			return false;
+		}
+		if (!game.settings.get(LastSceneView.mId, 'restore_level')) {
+			return false;
+		}
+		return savedPosition.level === LastSceneView.getCurrentLevelId();
 	}
 
 	static initialize() {
@@ -171,6 +203,16 @@ class LastSceneView {
 			config: true
 		});
 
+		game.settings.register(LastSceneView.mId, 'restore_level', {
+			name: game.i18n.localize("last-scene-view.restore-level"),
+			hint: game.i18n.localize("last-scene-view.restore-level-note"),
+			scope: 'world',
+			requiresReload: true,
+			default: true,
+			type: Boolean,
+			config: true
+		});
+
 		// renderSceneControls hooks seems to happen later enough to override the inital scene position
 		Hooks.on('canvasReady', async () => {
 			const currentScene = LastSceneView.getCurrentScene();
@@ -191,8 +233,8 @@ class LastSceneView {
 				return;
 			}
 
-			// Scene level selection is handled by core Scene.initialLevel.
-			// We only restore x/y/scale for the current level.
+			// Scene level selection is handled by core Scene.initialLevel when enabled.
+			// We always restore x/y/scale for the current level.
 			const savedPosition = LastSceneView.getSavedPosition(currentScene, game.userId, {
 				preferredLevelId: LastSceneView.getCurrentLevelId(),
 				preferPreferredLevel: true
@@ -200,7 +242,11 @@ class LastSceneView {
 			if (savedPosition) {
 				await LastSceneView.restorePosition(currentScene, savedPosition);
 				if (game.settings.get(LastSceneView.mId, 'enableRestoredMessage')) {
-					ui.notifications.info(game.i18n.localize("last-scene-view.position-restored"));
+					const suppressLevelMessage = LastSceneView.manuallyChangedLevelScenes.has(currentScene.id);
+					const key = !suppressLevelMessage && LastSceneView.wasLevelRestored(currentScene, savedPosition)
+						? "last-scene-view.position-and-level-restored"
+						: "last-scene-view.position-restored";
+					ui.notifications.info(game.i18n.localize(key));
 				}
 			}
 
@@ -227,7 +273,10 @@ class LastSceneView {
 			if (observedLevelId !== currentLevelId) {
 				LastSceneView.observedLevelByScene.set(currentSceneId, currentLevelId);
 				if (!disabled) {
-					LastSceneView.syncSceneInitialLevel(currentSceneId, currentLevelId);
+					LastSceneView.manuallyChangedLevelScenes.add(currentSceneId);
+					if (game.settings.get(LastSceneView.mId, 'restore_level')) {
+						LastSceneView.syncSceneInitialLevel(currentSceneId, currentLevelId);
+					}
 					LastSceneView.processUpdateScene();
 				}
 			}
@@ -307,7 +356,12 @@ class LastSceneView {
 			return null;
 		}
 
-		const normalizedPosition = LastSceneView.normalizePosition(position) ?? LastSceneView.getCanvasPositionSnapshot();
+		// Inject the current level into the position if not already present,
+		// because canvasPan provides {x, y, scale} without a level property.
+		const positionWithLevel = position
+			? { ...position, level: position.level ?? LastSceneView.getCurrentLevelId() }
+			: null;
+		const normalizedPosition = LastSceneView.normalizePosition(positionWithLevel) ?? LastSceneView.getCanvasPositionSnapshot();
 		if (!normalizedPosition) {
 			return null;
 		}
@@ -389,6 +443,7 @@ class LastSceneView {
 	static async syncSceneInitialLevel(scene_id, levelId) {
 		if (!game?.user?.isGM) return;
 		if (!levelId) return;
+		if (LastSceneView.isDisabled(scene_id)) return;
 
 		const scene = game.scenes.get(scene_id);
 		if (!scene) return;
@@ -459,5 +514,4 @@ function clearSavedPositions(scene_id) {
 }
 
 Hooks.on('canvasInit', (canvas) => {
-	console.debug('[last-scene-view] Canvas initialized.', canvas);
 });

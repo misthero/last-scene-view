@@ -12,16 +12,20 @@
 
 **The module you didn’t know you needed until you tried it.**
 
-This module saves each player's last scene view position, including the scene scale, and restores it when the scene is loaded again. Each scene will retain its view position relative to each player's ID.
+This module saves each player's last scene view position, including the scene scale, and restores it when the scene is loaded again. It can also restore each player's last viewed level (enabled by default). Each scene will retain its view position relative to each player's ID.
 
 This tiny module is useful for resuming exactly where you left off at the end of the last session or if you need to reload Foundry or in case of crashes and mid-session involuntary reloads. The initial scene view position will be ignored, and each player will start where they were last time.
 
 By default, the scene view position is saved 3 seconds after the last scene pan or zoom action. This delay is configurable.
 
+Level restoration is optional and can be disabled in module settings if you prefer Foundry's scene default level behavior.
+
 ## Features
 
-- The GM can disable the module for a specific scene using the scene configuration window. 
+- The GM can disable the module for a specific scene using the scene configuration window.
 - There is also an option to clear saved positions, in this case and when a player has no view position saved by this module, it will fall back to the default Foundry VTT "Initial View Position."
+- Optional level restoration setting (enabled by default).
+- Restore notification can indicate whether both level and position were restored, or only position.
 
 The scene navigation will show a tiny dot next to the name of the scene. The dot will be green if the last position has been saved, grey otherwise.
 

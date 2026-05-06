@@ -12,6 +12,7 @@
   "last-scene-view.message-enable-note": "Wyświetla komunikat po przywróceniu pozycji widoku sceny.",
   "last-scene-view.restore-level": "Przywróć ostatnio oglądany poziom.",
   "last-scene-view.restore-level-note": "Po włączeniu, przy ponownym otwarciu lub reaktywacji sceny zostanie przywrócony ostatnio oglądany poziom każdego użytkownika. Po wyłączeniu poziom nie jest przywracany i Foundry użyje domyślnego poziomu sceny.",
+  "last-scene-view.position-and-level-restored": "Przywrócono ostatnią pozycję i poziom widoku sceny!",
   "last-scene-view.position-restored": "Przywrócono ostatnią pozycję widoku sceny!",
   "last-scene-view.positions-deleted": "Każda zapisana pozycja dla sceny \"{sceneName}\" została wyeliminowana!"
 }

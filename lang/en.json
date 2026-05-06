@@ -12,6 +12,7 @@
   "last-scene-view.message-enable-note": "Show a message when scene view position is restored.",
   "last-scene-view.restore-level": "Restore last viewed level.",
   "last-scene-view.restore-level-note": "When enabled, reopening or reactivating a scene restores each user's most recently viewed level. When disabled, level restoration is skipped and Foundry uses the scene's default level.",
+  "last-scene-view.position-and-level-restored": "Last scene view position and level restored!",
   "last-scene-view.position-restored": "Last scene view position restored!",
   "last-scene-view.positions-deleted": "Every saved position for the scene \"{sceneName}\" has been eliminated!"
 }
