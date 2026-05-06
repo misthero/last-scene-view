@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## [Unreleased]
+## [1.4.00]
 
+- Added support for Foundry V14.
 - Added world setting to enable/disable restoring each user's last viewed level (enabled by default).
 - Added contextual restore notification for "position + level restored" versus position-only restore.
 - Prevented scene initial level sync updates when level restore is disabled or scene is disabled.
